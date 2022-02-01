@@ -1,10 +1,10 @@
 on:
   pull_request:
+    types:
+      - labeled
 
 jobs:
   comment:
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/github-script@v5
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -14,4 +14,14 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: '👋 Thanks for reporting! https://github.com/nbuchwitz/taescht/actions/runs/${{github.run_id}}'
+            })
+      - uses: actions/github-script@v5
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.removeLabel({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'snapshot-packages'
             })

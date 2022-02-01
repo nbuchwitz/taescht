@@ -1,0 +1,28 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    if: ${{ (github.event_name == 'pull_request' && github.event.label.name == 'snapshot-packages') }}
+    steps:
+        # Clone repository
+      - uses: actions/checkout@v2
+
+      # Build your application, tool, artifacts, etc.
+      - name: Build
+        run: |
+          echo "Build some tool and generate some artifacts" > artifact.txt
+
+      # Update tag and pre-release
+      # - Update (force-push) tag to the commit that is used in the workflow.
+      # - Upload artifacts defined by the user.
+      - uses: pyTooling/Actions/releaser@r0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            artifact.txt
+            README.md
+
