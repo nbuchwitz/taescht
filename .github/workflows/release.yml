@@ -6,7 +6,6 @@ on:
 jobs:
   comment:
     runs-on: ubuntu-latest
-    if: ${{ (github.event_name == 'pull_request' && github.event.label.name == 'snapshot-packages') }}
     steps:
         # Clone repository
       - uses: actions/checkout@v2
