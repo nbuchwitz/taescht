@@ -4,6 +4,7 @@ on:
 jobs:
   comment:
     runs-on: ubuntu-latest
+    if: ${{ (github.event_name == 'pull_request' && github.event.label.name == 'snapshot-packages') }}
     steps:
       - uses: actions/github-script@v5
         with:
@@ -14,4 +15,14 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: '👋 Thanks for reporting! https://github.com/nbuchwitz/taescht/actions/runs/${{github.run_id}}'
+            })
+      - uses: actions/github-script@v5
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.deleteLabel({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['snapshot-packages']
             })
